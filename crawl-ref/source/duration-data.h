@@ -586,6 +586,8 @@ static const duration_def duration_data[] =
     { DUR_ANCESTOR_DELAY, 0, "", "", "ancestor delay", "", D_NO_FLAGS, {{""}}},
     { DUR_NO_CAST, 0, "", "", "no cast", "", D_NO_FLAGS,
       {{ "You regain access to your magic." }, {}, true }},
+    { DUR_SWALLOW, 0, "", "", "suffocating", "", D_NO_FLAGS},
+    { DUR_SWALLOW_IMMUNITY, 0, "", "", "suffocation immunity", "", D_NO_FLAGS, {{""}}},
 
 #if TAG_MAJOR_VERSION == 34
     // And removed ones

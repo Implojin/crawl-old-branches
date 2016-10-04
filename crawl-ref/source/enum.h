@@ -1921,6 +1921,8 @@ enum duration_type
     DUR_NO_CAST,
     DUR_CHANNEL_ENERGY,
     DUR_SPWPN_PROTECTION,
+    DUR_SWALLOW,
+    DUR_SWALLOW_IMMUNITY,
     NUM_DURATIONS
 };
 
@@ -2096,6 +2098,7 @@ enum enchant_type
     ENCH_BOUND_SOUL,
     ENCH_INFESTATION,
     ENCH_STILL_WINDS,
+    ENCH_SWALLOW,
     // Update enchant_names[] in mon-ench.cc when adding or removing
     // enchantments.
     NUM_ENCHANTMENTS
@@ -2611,6 +2614,11 @@ enum monster_type                      // menv[].type
     MONS_BULLFROG,
     MONS_SPINY_FROG,
     MONS_BLINK_FROG,
+#if TAG_MAJOR_VERSION > 34
+    MONS_MANEATER_TOAD,
+    MONS_MANEATER_TENTACLE,
+    MONS_MANEATER_TENTACLE_SEGMENT,
+#endif
 #if TAG_MAJOR_VERSION > 34
     MONS_BEAR,                  // genus
 #endif
@@ -3550,6 +3558,9 @@ enum monster_type                      // menv[].type
     MONS_HALAZID_WARLOCK,
     MONS_DREAM_SHEEP,
     MONS_FROG,
+    MONS_MANEATER_TOAD,
+    MONS_MANEATER_TENTACLE,
+    MONS_MANEATER_TENTACLE_SEGMENT,
 #endif
 
     NUM_MONSTERS,               // used for polymorph
@@ -4707,6 +4718,8 @@ enum spell_type : int
     SPELL_GHOSTLY_SACRIFICE,
     SPELL_DREAM_DUST,
     SPELL_BECKONING,
+    SPELL_MANEATER_STOMP,
+    SPELL_FLICK_TONGUE,
     NUM_SPELLS
 };
 

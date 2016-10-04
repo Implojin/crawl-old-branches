@@ -462,6 +462,22 @@ bool fill_status_info(int status, status_info* inf)
         }
         break;
 
+    case DUR_SWALLOW:
+        inf->light_text   = "Swallow";  // todo: possibly change this status light text to Engulf, to make clear to players that it behaves similarly
+        if (you.res_water_drowning())
+        {
+            inf->short_text   = "swallowed";
+            inf->long_text    = "You have been swallowed whole.";
+            inf->light_colour = YELLOW;
+        }
+        else
+        {
+            inf->short_text   = "swallowed (cannot breathe)";
+            inf->long_text    = "You have been swallowed whole and are unable to breathe.";
+            inf->light_colour = RED;
+        }
+        break;
+
     case STATUS_DRAINED:
         if (you.attribute[ATTR_XP_DRAIN] > 250)
         {

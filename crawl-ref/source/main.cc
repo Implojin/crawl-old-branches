@@ -3424,6 +3424,20 @@ static void _move_player(coord_def move)
             you.duration[DUR_WATER_HOLD] = 1;
             you.props.erase("water_holder");
         }
+        
+        if (you.duration[DUR_SWALLOW])      // todo: fix this up
+        {
+            //if (you.can_swim())
+                //mpr("You deftly slip free of the water engulfing you.");
+            //else //Unless you're (huge?), this takes longer than normal
+            //{
+                mpr("With effort, you pry free of the maw that was swallowing "
+                    "you.");
+                you.time_taken = you.time_taken * 3 / 2;
+            //}
+            you.duration[DUR_SWALLOW] = 1;
+            you.props.erase("swallowed");
+        }
 
         if (you.digging)
         {

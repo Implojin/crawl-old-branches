@@ -553,6 +553,7 @@ public:
     void note_spell_cast(spell_type spell);
 
     bool clear_far_engulf() override;
+    bool clear_far_swallow() override;
     bool search_slots(function<bool (const mon_spell_slot &)> func) const;
 
     bool has_facet(int facet) const;

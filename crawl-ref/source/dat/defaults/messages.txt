@@ -24,6 +24,7 @@ msc += lightgrey:Something appears (at your feet|before you)
 msc += $danger:^Something .* you
 msc += $danger:you block its attack
 msc += $danger:constricts you
+msc += $danger:swallows you
 msc += $danger:you convulse
 msc += $danger:You feel a build-up of mutagenic energy
 msc += $danger:place you under penance

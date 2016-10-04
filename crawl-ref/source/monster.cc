@@ -675,7 +675,7 @@ bool monster::is_silenced() const
 {
     return silenced(pos())
             || has_ench(ENCH_MUTE)
-            || has_ench(ENCH_WATER_HOLD)
+            || (has_ench(ENCH_WATER_HOLD) || has_ench(ENCH_SWALLOW))
                && !res_water_drowning();
 }
 
@@ -6659,7 +6659,7 @@ bool monster::is_divine_companion() const
 
 bool monster::is_jumpy() const
 {
-    return type == MONS_JUMPING_SPIDER;
+    return type == MONS_JUMPING_SPIDER || MONS_MANEATER_TOAD;
 }
 
 // HD for spellcasting purposes.

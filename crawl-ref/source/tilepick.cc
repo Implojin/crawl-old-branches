@@ -1444,7 +1444,8 @@ enum tentacle_type
     TYPE_KRAKEN = 0,
     TYPE_ELDRITCH = 1,
     TYPE_STARSPAWN = 2,
-    TYPE_VINE = 3
+    TYPE_VINE = 3,
+    TYPE_MANEATER = 4
 };
 
 static void _add_tentacle_overlay(const coord_def pos,
@@ -1490,10 +1491,11 @@ static void _add_tentacle_overlay(const coord_def pos,
     env.tile_bg(next_showpos) |= flag;
 
     switch (type)
-    {
+    {   // TODO: Add TILE_FLAG_TENTACLE_MANEATER here, to enum.h, and in tiledgnbuf.cc as appropriate
         case TYPE_ELDRITCH: flag = TILE_FLAG_TENTACLE_ELDRITCH; break;
         case TYPE_STARSPAWN: flag = TILE_FLAG_TENTACLE_STARSPAWN; break;
         case TYPE_VINE: flag = TILE_FLAG_TENTACLE_VINE; break;
+        case TYPE_MANEATER: flag = TILE_FLAG_TENTACLE_STARSPAWN; break;
         default: flag = TILE_FLAG_TENTACLE_KRAKEN;
     }
     env.tile_bg(next_showpos) |= flag;
@@ -1574,6 +1576,9 @@ static tentacle_type _get_tentacle_type(const int mtype)
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
             return TYPE_VINE;
+        case MONS_MANEATER_TENTACLE:
+        case MONS_MANEATER_TENTACLE_SEGMENT:
+            return TYPE_MANEATER;
 
         default:
             die("Invalid tentacle type!");
@@ -1709,6 +1714,8 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
         case MONS_STARSPAWN_TENTACLE_SEGMENT:
         case MONS_SNAPLASHER_VINE:
         case MONS_SNAPLASHER_VINE_SEGMENT:
+        case MONS_MANEATER_TENTACLE:
+        case MONS_MANEATER_TENTACLE_SEGMENT:
         {
             tileidx_t tile = tileidx_tentacle(mon);
             _handle_tentacle_overlay(mon.pos, tile, _get_tentacle_type(mon.type));
@@ -1732,6 +1739,12 @@ static tileidx_t _tileidx_monster_no_props(const monster_info& mon)
                          || mon.type == MONS_SNAPLASHER_VINE_SEGMENT)
                 {
                     tile += TILEP_MONS_VINE_N;
+                    tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
+                }
+                else if (mon.type == MONS_MANEATER_TENTACLE     // todo: fixup the momentary blink eldritch portal tile replacement bug
+                         || mon.type == MONS_MANEATER_TENTACLE_SEGMENT)
+                {   // TODO: Add appropriate Tongue tiles here (and in dc-tentacles.txt, and wherever else is needed)
+                    tile += TILEP_MONS_STARSPAWN_TENTACLE_N;    // TODO: Need tile art for this, instead of using existing tentacle tiles.
                     tile -= TILEP_MONS_ELDRITCH_TENTACLE_N;
                 }
             }

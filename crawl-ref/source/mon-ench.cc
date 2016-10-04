@@ -1092,6 +1092,23 @@ bool monster::clear_far_engulf(void)
     return nonadj;
 }
 
+bool monster::clear_far_swallow(void)
+{
+    if (you.duration[DUR_SWALLOW]
+        && (mid_t) you.props["swallowed"].get_int() == mid)
+    {
+        you.clear_far_swallow();
+    }
+
+    const mon_enchant& me = get_ench(ENCH_SWALLOW);
+    if (me.ench == ENCH_NONE)
+        return false;
+    const bool nonadj = !me.agent() || !adjacent(me.agent()->pos(), pos());
+    if (nonadj)
+        del_ench(ENCH_SWALLOW);
+    return nonadj;
+}
+
 static void _entangle_actor(actor* act)
 {
     if (act->is_player())
@@ -1860,6 +1877,22 @@ void monster::apply_enchantment(const mon_enchant &me)
         }
         break;
 
+    case ENCH_SWALLOW:
+        if (!clear_far_swallow())
+        {
+            if (res_water_drowning() <= 0)
+            {
+                lose_ench_duration(me, -speed_to_duration(speed));
+                int dam = div_rand_round((50 + stepdown((float)me.duration, 30.0))
+                                          * speed_to_duration(speed),
+                            BASELINE_DELAY * 10);
+                if (res_water_drowning() < 0)
+                    dam = dam * 3 / 2;
+                hurt(me.agent(), dam);
+            }
+        }
+        break;
+
     case ENCH_FLAYED:
     {
         bool near_ghost = false;
@@ -2001,6 +2034,7 @@ bool monster::is_summoned(int* duration, int* summon_type) const
 
     // Nor are body parts.
     case SPELL_CREATE_TENTACLES:
+    case SPELL_FLICK_TONGUE:
 
     // Some object which was animated, and thus not really summoned.
     case MON_SUMM_ANIMATE:
@@ -2136,6 +2170,7 @@ static const char *enchant_names[] =
     "aura_of_brilliance", "empowered_spells", "gozag_incite", "pain_bond",
     "idealised", "bound_soul", "infestation",
     "stilling the winds",
+    "suffocating",
     "buggy",
 };
 

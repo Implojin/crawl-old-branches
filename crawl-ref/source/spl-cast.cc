@@ -577,7 +577,8 @@ static bool _can_cast()
         return false;
     }
 
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    if ((you.duration[DUR_WATER_HOLD] || you.duration[DUR_SWALLOW])
+        && !you.res_water_drowning())
     {
         mpr("You cannot cast spells while unable to breathe!");
         return false;

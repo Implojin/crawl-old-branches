@@ -169,6 +169,20 @@ static void _escape_water_hold(monster& mons)
     }
 }
 
+static void _escape_swallow(monster& mons)
+{
+    if (mons.has_ench(ENCH_SWALLOW))        // todo: fix this up (add a check to fail due to constrict?) (possibly add strength or size bonus to escape?)
+    {
+        //if (mons_habitat(mons) != HT_AMPHIBIOUS
+        //    && mons_habitat(mons) != HT_WATER)
+        //{
+        //    mons.speed_increment -= 5;
+        //}
+        simple_monster_message(mons, " pries free of the maw.");
+        mons.del_ench(ENCH_SWALLOW);
+    }
+}
+
 static void _handle_manticore_barbs(monster& mons)
 {
     if (mons.has_ench(ENCH_BARBS))
@@ -245,6 +259,7 @@ static bool _swap_monsters(monster& mover, monster& moved)
     }
 
     _escape_water_hold(mover);
+    _escape_swallow(mover);
 
     _handle_manticore_barbs(mover);
     _handle_manticore_barbs(moved);
@@ -1614,6 +1629,8 @@ static int _tentacle_move_speed(monster_type type)
         return 10;
     else if (type == MONS_TENTACLED_STARSPAWN)
         return 18;
+    else if (type == MONS_MANEATER_TOAD)
+        return 30;  // let's test this, hopefully it's not too ridiculous
     else
         return 0;
 }
@@ -3560,6 +3577,7 @@ static bool _do_move_monster(monster& mons, const coord_def& delta)
     _swim_or_move_energy(mons);
 
     _escape_water_hold(mons);
+    _escape_swallow(mons);
 
     if (grd(mons.pos()) == DNGN_DEEP_WATER && grd(f) != DNGN_DEEP_WATER
         && !monster_habitable_grid(&mons, DNGN_DEEP_WATER)

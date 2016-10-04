@@ -747,7 +747,8 @@ bool zin_check_able_to_recite(bool quiet)
         return false;
     }
 
-    if (you.duration[DUR_WATER_HOLD] && !you.res_water_drowning())
+    if ((you.duration[DUR_WATER_HOLD] || you.duration[DUR_SWALLOW])
+        && !you.res_water_drowning())
     {
         if (!quiet)
             mpr("You cannot recite while unable to breathe!");

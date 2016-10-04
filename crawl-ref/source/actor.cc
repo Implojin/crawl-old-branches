@@ -538,6 +538,7 @@ void actor::clear_far_constrictions()
 void actor::clear_constrictions_far_from(const coord_def &where)
 {
     clear_far_engulf();
+    clear_far_swallow();
     actor* const constrictor = actor_by_mid(constricted_by);
 
     if (!constrictor || !adjacent(where, constrictor->pos()))

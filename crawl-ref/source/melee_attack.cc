@@ -320,7 +320,8 @@ static bool _flavour_triggers_damageless(attack_flavour flavour)
            || flavour == AF_SHADOWSTAB
            || flavour == AF_DROWN
            || flavour == AF_CORRODE
-           || flavour == AF_HUNGER;
+           || flavour == AF_HUNGER
+           || flavour == AF_SWALLOW;
 }
 
 void melee_attack::apply_black_mark_effects()
@@ -3043,6 +3044,41 @@ void melee_attack::mons_apply_attack_flavour()
     case AF_WEAKNESS:
         if (coinflip())
             defender->weaken(attacker, 12);
+        break;
+
+    // if engulf + constrict is too much, remove start_constricting
+    case AF_SWALLOW:
+        if (x_chance_in_y(2, 3) && attacker->can_constrict(defender))
+        {
+            if (defender->is_player() && !you.duration[DUR_SWALLOW]
+                && !you.duration[DUR_SWALLOW_IMMUNITY])
+            {
+                // if you got swallowed, interrupt stair climb and passwall
+                stop_delay(true);
+                you.duration[DUR_SWALLOW] = 10;
+                you.props["swallowed"].get_int() = attacker->as_monster()->mid;
+                attacker->start_constricting(*defender);
+                defender->expose_to_element(BEAM_WATER, 0);
+            }
+            else if (defender->is_monster()
+                     && !defender->as_monster()->has_ench(ENCH_SWALLOW))
+            {
+                defender->as_monster()->add_ench(mon_enchant(ENCH_SWALLOW, 1,
+                                                             attacker, 1));
+                attacker->start_constricting(*defender);
+                defender->expose_to_element(BEAM_WATER, 0);
+            }
+            else
+                return; //Didn't apply effect; no message
+
+            if (needs_message)
+            {
+                mprf("%s %s %s whole!",
+                     atk_name(DESC_THE).c_str(),
+                     attacker->conj_verb("swallow").c_str(),
+                     defender_name(true).c_str());
+            }
+        }
         break;
     }
 }

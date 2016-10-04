@@ -146,6 +146,11 @@ static monster_info_flags ench_to_mb(const monster& mons, enchant_type ench)
             return MB_WATER_HOLD;
         else
             return MB_WATER_HOLD_DROWN;
+    case ENCH_SWALLOW:
+        if (mons.res_water_drowning())
+            return MB_SWALLOW;
+        else
+            return MB_SWALLOW_SUFFOCATE;
     case ENCH_DRAINED:
         {
             const bool heavily_drained = mons.get_ench(ench).degree
@@ -1542,6 +1547,13 @@ vector<string> monster_info::attributes() const
         v.emplace_back("infested");
     if (is(MB_STILL_WINDS))
         v.emplace_back("stilling the winds");
+    if (is(MB_SWALLOW))
+        v.emplace_back("swallowed whole");
+    if (is(MB_SWALLOW_SUFFOCATE))
+    {
+        v.emplace_back("swallowed whole");
+        v.emplace_back("unable to breathe");
+    }
     return v;
 }
 

@@ -1872,6 +1872,8 @@ bool setup_mons_cast(const monster* mons, bolt &pbolt, spell_type spell_cast,
     case SPELL_GREATER_SERVANT_MAKHLEB:
     case SPELL_BIND_SOULS:
     case SPELL_DREAM_DUST:
+    case SPELL_MANEATER_STOMP:
+    case SPELL_FLICK_TONGUE:
         pbolt.range = 0;
         pbolt.glyph = 0;
         return true;
@@ -5623,6 +5625,16 @@ static void _dream_sheep_sleep(monster& mons, actor& foe)
         foe.put_to_sleep(&mons, sleep_pow, false);
 }
 
+static void _maneater_stomp(monster* mons)
+{
+    blink_close(mons);
+    
+    // todo: let's try to setup the blink_nearer beam.
+    //bolt targ_beam = setup_targeting_beam(*mons);
+
+    shillelagh(mons, mons->pos(), 20);
+}
+
 /**
  *  Make this monster cast a spell
  *
@@ -5962,6 +5974,7 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
         return;
 
     case SPELL_CREATE_TENTACLES:
+    case SPELL_FLICK_TONGUE:
         mons_create_tentacles(mons);
         return;
 
@@ -6689,6 +6702,13 @@ void mons_cast(monster* mons, bolt pbolt, spell_type spell_cast,
     case SPELL_BLINK_ALLIES_AWAY:
         _blink_allies_away(mons);
         return;
+
+    case SPELL_MANEATER_STOMP:      // todo: move this case: to the bottom, i don't know why i put it here
+    {
+        // todo: write blink_closer functionality, and fixup this to use it
+        _maneater_stomp(mons);
+        return;
+    }
 
     case SPELL_SHROUD_OF_GOLUBRIA:
         if (you.can_see(*mons))
@@ -8147,6 +8167,16 @@ static bool _ms_waste_of_time(monster* mon, mon_spell_slot slot)
             if (_mons_can_bind_soul(mon, *mi))
                 return false;
         return true;
+
+    // maneaters are hungry, don't leap if adjacent to target
+    case SPELL_MANEATER_STOMP:
+        return !foe || adjacent(mon->pos(), foe->pos());
+
+    // ...and only create a tongue at middling range, it prefers to leap closer
+    case SPELL_FLICK_TONGUE:
+        return !foe || foe->pos().distance_from(mon->pos()) < 3
+               || foe->pos().distance_from(mon->pos()) > 5 
+               || !mons_available_tentacles(mon);
 
     case SPELL_CORPSE_ROT:
     case SPELL_POISONOUS_CLOUD:

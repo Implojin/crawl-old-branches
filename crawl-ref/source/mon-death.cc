@@ -2552,6 +2552,8 @@ item_def* monster_die(monster* mons, killer_type killer,
                 mpr("The dead kraken's tentacles slide back into the water.");
             else if (mons->type == MONS_TENTACLED_STARSPAWN)
                 mpr("The starspawn's tentacles wither and die.");
+            else if (mons->type == MONS_MANEATER_TOAD)
+                mpr("The dead maneater's tongue retracts into its mouth.");
         }
     }
     else if (mons_is_tentacle_or_tentacle_segment(mons->type)

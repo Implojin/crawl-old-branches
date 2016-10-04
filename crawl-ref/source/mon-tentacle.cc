@@ -22,8 +22,10 @@
 #include "view.h"
 
 const int MAX_KRAKEN_TENTACLE_DIST = 12;
+const int MAX_MANEATER_TENTACLE_DIST = 4;
 const int MAX_ACTIVE_KRAKEN_TENTACLES = 4;
 const int MAX_ACTIVE_STARSPAWN_TENTACLES = 2;
+const int MAX_ACTIVE_MANEATER_TENTACLES = 1;
 
 static monster_type _head_child_segment[][3] =
 {
@@ -31,6 +33,8 @@ static monster_type _head_child_segment[][3] =
         MONS_KRAKEN_TENTACLE_SEGMENT },
     { MONS_TENTACLED_STARSPAWN, MONS_STARSPAWN_TENTACLE,
         MONS_STARSPAWN_TENTACLE_SEGMENT },
+    { MONS_MANEATER_TOAD, MONS_MANEATER_TENTACLE,
+        MONS_MANEATER_TENTACLE_SEGMENT },
 };
 
 static monster_type _solo_tentacle_to_segment[][2] =
@@ -1048,7 +1052,11 @@ void move_child_tentacles(monster* mons)
 
         tentacle_attack_constraints attack_constraints;
         attack_constraints.base_monster = tentacle;
-        attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
+        // Limit maneater tongue length.
+        if (mons->type == MONS_MANEATER_TOAD)
+            attack_constraints.max_string_distance = MAX_MANEATER_TENTACLE_DIST;
+        else
+            attack_constraints.max_string_distance = MAX_KRAKEN_TENTACLE_DIST;
         attack_constraints.connection_constraints = &connection_data;
         attack_constraints.target_positions = &foe_positions;
 
@@ -1212,6 +1220,8 @@ static int _max_tentacles(const monster* mon)
         return MAX_ACTIVE_KRAKEN_TENTACLES;
     else if (mon->type == MONS_TENTACLED_STARSPAWN)
         return MAX_ACTIVE_STARSPAWN_TENTACLES;
+    else if (mon->type == MONS_MANEATER_TOAD)
+        return MAX_ACTIVE_MANEATER_TENTACLES;
     else
         return 0;
 }
@@ -1287,6 +1297,13 @@ void mons_create_tentacles(monster* head)
             mpr("A tentacle flies out from the starspawn's body!");
         else if (visible_count > 1)
             mpr("Tentacles burst from the starspawn's body!");
+    }
+    else if (head->type == MONS_MANEATER_TOAD)
+    {
+        if (visible_count == 1)
+            mpr("A sinuous tongue flicks out from the maneater's maw!");
+        else if (visible_count > 1)
+            mpr("Buggy tongues flick out from the maneater's maw!");
     }
     return;
 }

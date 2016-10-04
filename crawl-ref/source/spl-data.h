@@ -3859,6 +3859,28 @@ static const struct spell_desc spelldata[] =
 },
 
 {
+    SPELL_MANEATER_STOMP, "Maneater Stomp",
+    SPTYP_NONE,
+    SPFLAG_AREA | SPFLAG_MONSTER | SPFLAG_NOISY,
+    2,          // spell level 2 for initial testing, look into what this affects for mon spells
+    200,        // power cap at 200 for initial testing, might lower this
+    3, 3,       // minrange 3, maxrange 3 for initial testing   // todo: check if this is actually affecting leap range?
+    7, 30,      // shatter noise, shatter effect noise for initial testing
+    TILEG_ERROR,
+},
+
+{       // duplicating SPELL_CREATE_TENTACLES, just need an alternate description
+    SPELL_FLICK_TONGUE, "Flick Tongue",
+    SPTYP_NONE,
+    SPFLAG_MONSTER | SPFLAG_SELFENCH,
+    5,      // todo: fixup FLICK_TONGUE so that it passes through minrange, maxrange to MAX_MANEATER_TENTACLE_DIST
+    0,      // todo: also fixup so that it passes range at current spellpower through to _ms_waste_of_time (is this needed?)
+    5, 5,     // I think this currently only affects display range here (SPELL_CREATE_TENTACLES uses -1, -1 minrange, maxrange)
+    4, 0,
+    TILEG_CREATE_TENTACLES,     // todo: add unique tile?
+},
+
+{
     SPELL_NO_SPELL, "nonexistent spell",
     SPTYP_NONE,
     SPFLAG_TESTING,

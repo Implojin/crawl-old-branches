@@ -925,6 +925,15 @@ static const mon_spellbook mspell_list[] =
       }
     },
 
+    // ('F') Frogs.
+    {  MST_MANEATER_TOAD,
+      {
+       { SPELL_FLICK_TONGUE, 50, MON_SPELL_NATURAL },
+       { SPELL_MANEATER_STOMP, 50, MON_SPELL_NATURAL | MON_SPELL_NOISY
+                                     | MON_SPELL_BREATH },
+      }
+    },
+
     // ('G') Organs.
     {  MST_FLOATING_EYE,
       {

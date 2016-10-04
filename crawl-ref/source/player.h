@@ -841,6 +841,7 @@ public:
     bool form_uses_xl() const;
 
     bool clear_far_engulf() override;
+    bool clear_far_swallow() override;
 
 protected:
     void _removed_beholder(bool quiet = false);
@@ -1104,6 +1105,7 @@ void dec_disease_player(int delay);
 void player_end_berserk();
 
 void handle_player_drowning(int delay);
+void handle_player_suffocating(int delay);
 
 // Determines if the given grid is dangerous for the player to enter.
 bool is_feat_dangerous(dungeon_feature_type feat, bool permanently = false,

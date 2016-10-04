@@ -725,7 +725,8 @@ void yell(const actor* mon)
     {
         if (mon)
         {
-            if (you.paralysed() || you.duration[DUR_WATER_HOLD])
+            if (you.paralysed() || you.duration[DUR_WATER_HOLD]
+                || you.duration[DUR_SWALLOW])
             {
                 mprf("You feel a strong urge to %s, but "
                      "you are unable to make a sound!",

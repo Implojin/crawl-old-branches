@@ -2986,6 +2986,7 @@ static const char* _describe_attack_flavour(attack_flavour flavour)
     case AF_WEAKNESS:        return "cause weakness";
     case AF_KITE:            return "retreat from adjacent targets";
     case AF_SWOOP:           return "swoop behind its target";
+    case AF_SWALLOW:         return "swallow its target whole";
     default:                 return "";
     }
 }

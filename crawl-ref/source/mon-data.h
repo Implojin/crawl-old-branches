@@ -3280,6 +3280,54 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
     {TILEP_MONS_BLINK_FROG}, TILE_CORPSE_BLINK_FROG
 },
 
+{
+    MONS_MANEATER_TOAD, 'F', BROWN, "maneater toad",
+    M_COLD_BLOOD,
+    MR_NO_FLAGS,
+    5, MONS_FROG, MONS_MANEATER_TOAD, MH_NATURAL, 20,
+    { {AT_HIT, AF_SWALLOW, 12}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    10, 770, // (now trying with 10 HD instead of 8), old was blink frog HD and death yak HP as a starting point, intended to be HP soaks
+    8, 0, MST_MANEATER_TOAD, CE_NOXIOUS, S_CROAK,   // todo: fixup MST_MANEATER_TOAD spellset, to include stomp and croak (or alternately add jiangshi movement), possibly change S_CROAK to add/replace S_LOUD_CROAK or something
+    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,   // todo: figure out proper speed and energy costs to achieve 0 move -> 2 move cadence, with 1.0 attacks/casts
+    MONUSE_NOTHING, SIZE_BIG, MON_SHAPE_QUADRUPED_TAILLESS,
+    {TILEP_MONS_BULLFROG}, TILE_CORPSE_BULLFROG   // todo: add {TILEP_MONS_MANEATER_TOAD}, TILE_CORPSE_MANEATER_TOAD
+},
+
+{
+    MONS_MANEATER_TENTACLE, 'w', LIGHTRED, "maneater tongue",
+    M_COLD_BLOOD | M_NO_EXP_GAIN | M_STATIONARY | M_NO_POLY_TO | M_FLIES,
+    MR_NO_FLAGS,
+    10, MONS_MANEATER_TOAD, MONS_MANEATER_TENTACLE,
+        MH_NATURAL, MAG_IMMUNE,
+    //{ {AT_BITE, AF_PLAIN, 2}, {AT_CONSTRICT, AF_CRUSH, 1},    // ball python attack statline
+    //{ {AT_CONSTRICT, AF_CRUSH, 3}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, // starspawn tentacle attack statline
+    //{ {AT_TENTACLE_SLAP, AF_PLAIN, 29}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },    // kraken tentacle statline
+    //{ {AT_TENTACLE_SLAP, AF_CHAOTIC, 30}, {AT_CLAW, AF_CHAOTIC, 40}, AT_NO_ATK,   // eldritch tentacle statline
+    //{ {AT_STING, AF_REACH_STING, 15}, {AT_HIT, AF_WEAKNESS, 8}, AT_NO_ATK,    // orange demon statline
+    //{ {AT_BITE, AF_PLAIN, 20}, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK }, // crocodile statline
+    { {AT_TENTACLE_SLAP, AF_WEAKNESS, 5}, {AT_CONSTRICT, AF_CRUSH, 7},
+      AT_NO_ATK, AT_NO_ATK },   // todo: fixup tentacle attacks + values
+    10, 100,        // now trying with 10 HD instead of 6, and half old tongue HP
+    4, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // not sure what speed I want to use here, 20 to 30? i want it to be able to reach 3 tiles and constrict in 1 turn. this will mean it chain attacks when it gets there though...
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE,
+    {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR    // todo: fixup tentacle + segment tiles
+},
+
+{
+    MONS_MANEATER_TENTACLE_SEGMENT, '*', LIGHTRED, "maneater tongue segment",
+    M_COLD_BLOOD | M_NOT_DANGEROUS | M_STATIONARY | M_NO_POLY_TO | M_FLIES,
+    MR_NO_FLAGS,
+    10, MONS_MANEATER_TOAD, MONS_MANEATER_TENTACLE_SEGMENT,
+        MH_NATURAL, MAG_IMMUNE,
+    { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
+    6, 200,
+    4, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
+    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // initial testing at 25 speed
+    MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC,
+    {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR
+},
+
 // eyes ('G')
 {
     MONS_FLOATING_EYE, 'G', WHITE, "floating eye",

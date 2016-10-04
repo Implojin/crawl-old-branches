@@ -1589,6 +1589,23 @@ A violet-scaled serpent with faintly glowing eyes. It thirsts for magic as well
 as flesh, and its bite can drink dry the magical reservoirs of even a powerful
 mage in no time.
 %%%%
+maneater toad
+
+A colossal gluttonous toad. Leaping about in fits, crushing any nearby as it
+lands, this abomination is driven to seek larger prey. Weakening mucus exuded
+from its prehensile tongue subdues those yet to be digested.
+%%%%
+maneater tongue
+
+The sinuous tongue of a maneater toad. Writhing around its target with a
+weakening mucus, the maneater yanks its prey inward to be swallowed whole. Any
+damage dealt to it hurts the whole creature.
+%%%%
+maneater tongue segment
+
+A taut length of extended maneater tongue. Any damage dealt to it hurts the
+whole creature.
+%%%%
 manticore
 
 A hideous cross-breed, bearing the features of a human and a lion, with great

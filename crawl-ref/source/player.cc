@@ -4647,7 +4647,8 @@ bool napalm_player(int amount, string source, string source_aux)
 {
     ASSERT(!crawl_state.game_is_arena());
 
-    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD] || feat_is_watery(grd(you.pos())))
+    if (player_res_sticky_flame() || amount <= 0 || you.duration[DUR_WATER_HOLD]
+        || you.duration[DUR_SWALLOW] || feat_is_watery(grd(you.pos())))
         return false;
 
     const int old_value = you.duration[DUR_LIQUID_FLAMES];
@@ -5120,6 +5121,71 @@ void handle_player_drowning(int delay)
                                 * delay,
                                 BASELINE_DELAY * 10);
             ouch(dam, KILLED_BY_WATER, mons->mid);
+            mprf(MSGCH_WARN, "Your lungs strain for air!");
+        }
+    }
+}
+
+static void _end_swallow()
+{
+    you.duration[DUR_SWALLOW] = 0;
+    you.duration[DUR_SWALLOW_IMMUNITY] = 1;
+    you.props.erase("swallowed");
+}
+
+bool player::clear_far_swallow()
+{
+    if (!you.duration[DUR_SWALLOW])
+        return false;
+
+    monster * const mons = monster_by_mid(you.props["swallowed"].get_int());
+    if (!mons || !adjacent(mons->pos(), you.pos()))
+    {
+        if (you.res_water_drowning())
+            mpr("The water engulfing you falls away.");     // todo: write appropriate message(s) for this
+        else
+            mpr("You gasp with relief as air once again reaches your lungs.");
+
+        _end_swallow();
+        return true;
+    }
+    return false;
+}
+
+void handle_player_suffocating(int delay)
+{
+    if (you.duration[DUR_SWALLOW] == 1)
+    {
+        if (!you.res_water_drowning())
+            mpr("You gasp with relief as air once again reaches your lungs.");
+        _end_swallow();
+    }
+    else
+    {
+        monster* mons = monster_by_mid(you.props["swallowed"].get_int());
+        if (!mons || !adjacent(mons->pos(), you.pos()))
+        {
+            if (you.res_water_drowning())
+                mpr("The water engulfing you falls away.");     // todo: write appropriate messages for this
+            else
+                mpr("You gasp with relief as air once again reaches your lungs.");
+
+            _end_swallow();
+
+        }
+        else if (you.res_water_drowning())
+        {
+            // Reset so damage doesn't ramp up while able to breathe
+            you.duration[DUR_SWALLOW] = 10;
+        }
+        else if (!you.res_water_drowning())
+        {
+            you.duration[DUR_SWALLOW] += delay;
+            int dam =
+                div_rand_round((28 + stepdown((float)you.duration[DUR_SWALLOW], 28.0))
+                                * delay,
+                                BASELINE_DELAY * 10);
+            ouch(dam, KILLED_BY_WATER, mons->mid);      // todo: look into adding KILLED_BY_SUFFOCATION ; (either that or use KILLED_BY_CURARE ?)
             mprf(MSGCH_WARN, "Your lungs strain for air!");
         }
     }
