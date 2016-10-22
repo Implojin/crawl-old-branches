@@ -89,6 +89,10 @@ Stop Singing ability
 
 Stops singing your Song of Slaying.
 %%%%
+Disperse Charms ability
+
+Stops your active charm effects and their contaminating glow.
+%%%%
 Self-Restoration ability
 
 Restores your strength, dexterity and intelligence and heals any rotted health,

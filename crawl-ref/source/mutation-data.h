@@ -132,7 +132,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_HEAT_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL | mutflag::DANGEROUS, true,
   "heat vulnerability",
 
   {"You are vulnerable to heat. (rF-)",
@@ -149,7 +149,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_COLD_VULNERABILITY, 0, 3,
-  mutflag::BAD | mutflag::QAZLAL, true,
+  mutflag::BAD | mutflag::QAZLAL | mutflag::DANGEROUS, true,
 
   "cold vulnerability",
 
@@ -190,7 +190,8 @@ static const mutation_def mut_data[] =
   {"You feel conductive.", "", ""},
 },
 
-{ MUT_SHOCK_VULNERABILITY, 0, 1, mutflag::BAD | mutflag::QAZLAL, true,
+{ MUT_SHOCK_VULNERABILITY, 0, 1,
+  mutflag::BAD | mutflag::QAZLAL | mutflag::DANGEROUS, true,
   "electricity vulnerability",
 
   {"You are vulnerable to electric shocks.", "", ""},
@@ -214,7 +215,7 @@ static const mutation_def mut_data[] =
    "Your rate of healing slows."},
 },
 
-{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD, false,
+{ MUT_SLOW_REGENERATION, 3, 3, mutflag::BAD | mutflag::DANGEROUS, false,
   "slow regeneration",
 
   {"You regenerate slowly when monsters are visible.",
@@ -299,7 +300,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_TELEPORT, 3, 3, mutflag::BAD, false,
+{ MUT_TELEPORT, 3, 3, mutflag::BAD | mutflag::DANGEROUS, false,
   "teleportitis",
 
   {"You are occasionally teleported next to monsters.",
@@ -347,7 +348,7 @@ static const mutation_def mut_data[] =
    "You feel sluggish."},
 },
 
-{ MUT_SLOW, 0, 3, mutflag::BAD, true,
+{ MUT_SLOW, 0, 3, mutflag::BAD | mutflag::DANGEROUS, true,
   "slowness",
 
   {"You cover ground slowly.",
@@ -472,7 +473,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_SCREAM, 6, 3, mutflag::BAD | mutflag::XOM, false,
+{ MUT_SCREAM, 6, 3, mutflag::BAD | mutflag::XOM | mutflag::DANGEROUS, false,
   "screaming",
 
   {"You occasionally shout uncontrollably at your foes.",
@@ -496,7 +497,7 @@ static const mutation_def mut_data[] =
   {"Your thinking seems confused.", "", ""},
 },
 
-{ MUT_BERSERK, 7, 3, mutflag::BAD, false,
+{ MUT_BERSERK, 7, 3, mutflag::BAD | mutflag::DANGEROUS, false,
   "berserk",
 
   {"You tend to lose your temper in combat.",
@@ -528,7 +529,8 @@ static const mutation_def mut_data[] =
    ""},
 },
 
-{ MUT_BLURRY_VISION, 10, 3, mutflag::BAD | mutflag::XOM, false,
+{ MUT_BLURRY_VISION, 10, 3,
+  mutflag::BAD | mutflag::XOM | mutflag::DANGEROUS, false,
   "blurry vision",
 
   {"Scrolls take you a little longer to read.",
@@ -577,7 +579,7 @@ static const mutation_def mut_data[] =
 },
 
 { MUT_FRAIL, 10, 3,
-  mutflag::BAD | mutflag::XOM, false,
+  mutflag::BAD | mutflag::XOM | mutflag::DANGEROUS, false,
   "frail",
 
   {"You are frail. (-10% HP)",
@@ -1229,7 +1231,7 @@ static const mutation_def mut_data[] =
   {"Your magical appetite wanes.", "", ""},
 },
 
-{ MUT_NO_DEVICE_HEAL, 3, 3, mutflag::BAD, false,
+{ MUT_NO_DEVICE_HEAL, 3, 3, mutflag::BAD | mutflag::DANGEROUS, false,
   "no device heal",
 
   {"Potions and wands are less effective at restoring your health.",
@@ -1610,7 +1612,7 @@ static const mutation_def mut_data[] =
 },
 #endif
 
-{ MUT_NO_DRINK, 0, 1, mutflag::BAD, false,
+{ MUT_NO_DRINK, 0, 1, mutflag::BAD | mutflag::DANGEROUS, false,
   "inability to drink while threatened",
 
   {"You cannot drink potions while threatened.", "", ""},
@@ -1618,7 +1620,7 @@ static const mutation_def mut_data[] =
   {"You can once more drink potions while threatened.", "", ""},
 },
 
-{ MUT_NO_READ, 0, 1, mutflag::BAD, false,
+{ MUT_NO_READ, 0, 1, mutflag::BAD | mutflag::DANGEROUS, false,
   "inability to read while threatened",
 
   {"You cannot read scrolls while threatened.", "", ""},
@@ -1806,7 +1808,7 @@ static const mutation_def mut_data[] =
     "You reflexes speed back up."},
 },
 
-{ MUT_MAGICAL_VULNERABILITY, 0, 3, mutflag::BAD, false,
+{ MUT_MAGICAL_VULNERABILITY, 0, 3, mutflag::BAD | mutflag::DANGEROUS, false,
   "magic vulnerability",
 
   {"You are slightly vulnerable to magic. (MR-)",
@@ -1886,7 +1888,7 @@ static const mutation_def mut_data[] =
   {"Your right eye suddenly reappears! The world regains its depth.", "", ""},
 },
 
-{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, mutflag::BAD, false,
+{ MUT_TEMPERATURE_SENSITIVITY, 0, 1, mutflag::BAD | mutflag::DANGEROUS, false,
   "temperature sensitive",
 
   {"You are sensitive to extremes of temperature. (rF-, rC-)", "", ""},

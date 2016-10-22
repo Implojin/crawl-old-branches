@@ -747,7 +747,7 @@ static void _magic_contamination_effects()
     mprf(MSGCH_WARN, "Your body shudders with the violent release "
                      "of wild energies!");
 
-    const int contam = you.magic_contamination;
+    const int contam = (you.magic_contamination + you.persistent_contamination);
 
     // For particularly violent releases, make a little boom.
     if (contam > 10000 && coinflip())
@@ -776,16 +776,83 @@ static void _magic_contamination_effects()
     }
 
 #if TAG_MAJOR_VERSION == 34
-    const mutation_permanence_class mutclass = you.species == SP_DJINNI
-        ? MUTCLASS_TEMPORARY
-        : MUTCLASS_NORMAL;
+    // I wanna be a deejay
+    const mutation_permanence_class mutclass = MUTCLASS_TEMPORARY;
+//    const mutation_permanence_class mutclass = you.species == SP_DJINNI
+//        ? MUTCLASS_TEMPORARY
+//        : MUTCLASS_NORMAL;
 #else
     const mutation_permanence_class mutclass = MUTCLASS_NORMAL;
 #endif
 
     // We want to warp the player, not do good stuff!
-    mutate(one_chance_in(5) ? RANDOM_MUTATION : RANDOM_BAD_MUTATION,
-           "mutagenic glow", true, coinflip(), false, false, mutclass, false);
+    // Here we start off with the old chance for bad mutations, and get more
+    // punishing at each additional glow tier.
+    switch (get_contamination_level())
+    {   // intentional fallthroughs, these are meant to stack with higher glow
+        case 6:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(RANDOM_DANGEROUS_MUTATION,
+                       "mutagenic glow", true, true, false, false,
+                       mutclass, false);
+            }
+        case 5:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(one_chance_in(2) ? RANDOM_DANGEROUS_MUTATION
+                                        : RANDOM_BAD_MUTATION,
+                       "mutagenic glow", true, true, false, false,
+                       mutclass, false);
+            }
+        case 4:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(one_chance_in(4) ? RANDOM_DANGEROUS_MUTATION
+                                        : RANDOM_BAD_MUTATION,
+                       "mutagenic glow", true, coinflip(), false, false,
+                       mutclass, false);
+            }
+        case 3:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(RANDOM_BAD_MUTATION,
+                       "mutagenic glow", true, coinflip(), false, false,
+                       mutclass, false);
+            }
+        case 2:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(one_chance_in(10) ? RANDOM_MUTATION
+                                         : RANDOM_BAD_MUTATION,
+                       "mutagenic glow", true, coinflip(), false, false,
+                       mutclass, false);
+            }
+        case 1:
+            for (int i = 2; i > 0; --i)
+            {
+                if (coinflip())
+                    --i;
+                mutate(one_chance_in(5) ? RANDOM_MUTATION
+                                        : RANDOM_BAD_MUTATION,
+                       "mutagenic glow", true, coinflip(), false, false,
+                       mutclass, false);
+            }
+            break;
+        case 0:
+        default:
+            break;
+    }
 
     // we're meaner now, what with explosions and whatnot, but
     // we dial down the contamination a little faster if its actually
@@ -796,9 +863,15 @@ static void _magic_contamination_effects()
 // then actually does it if they should be.
 static void _handle_magic_contamination(int /*time_delta*/)
 {
-    // [ds] Move magic contamination effects closer to b26 again.
-    const bool glow_effect = player_severe_contamination()
-                             && x_chance_in_y(you.magic_contamination, 12000);
+//    // [ds] Move magic contamination effects closer to b26 again.
+//    const bool glow_effect = player_severe_contamination()
+//                             && x_chance_in_y(you.magic_contamination, 12000);
+
+    // To be an effective short-duration buff spell counterbalance, this needs
+    // to rapidly mutate.
+    const bool glow_effect = x_chance_in_y((you.magic_contamination 
+                                            + you.persistent_contamination),
+                                            4500);
 
     if (glow_effect)
     {

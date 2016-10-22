@@ -261,6 +261,7 @@ public:
     vector<demon_trait> demonic_traits;
 
     int magic_contamination;
+    int persistent_contamination;
 
     FixedBitVector<NUM_FIXED_BOOKS> had_book;
     FixedBitVector<NUM_SPELLS>      seen_spell;
@@ -1051,6 +1052,8 @@ int get_real_mp(bool include_items);
 
 int get_contamination_level();
 bool player_severe_contamination();
+int player_glowy_spells();
+void player_update_persistent_contamination(int contam_multiplier);
 string describe_contamination(int level);
 
 bool sanguine_armour_valid();

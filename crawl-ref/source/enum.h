@@ -236,6 +236,7 @@ enum ability_type
     ABIL_DELAYED_FIREBALL,
     ABIL_END_TRANSFORMATION,
     ABIL_STOP_SINGING, // From song of slaying
+    ABIL_DISPERSE_CHARMS,
 
     // Species-specific abilities.
     // Demonspawn-only
@@ -3866,6 +3867,7 @@ enum mutation_type
     RANDOM_NON_SLIME_MUTATION,
     RANDOM_CORRUPT_MUTATION,
     RANDOM_QAZLAL_MUTATION,
+    RANDOM_DANGEROUS_MUTATION,
     MUT_NON_MUTATION,
 };
 

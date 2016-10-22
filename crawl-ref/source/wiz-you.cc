@@ -609,7 +609,7 @@ bool wizard_add_mutation()
     unwind_var<uint8_t> mut_res(you.mutation[MUT_MUTATION_RESISTANCE], 0);
 
     msgwin_get_line("Which mutation (name, 'good', 'bad', 'any', "
-                    "'xom', 'slime', 'qazlal')? ",
+                    "'xom', 'slime', 'qazlal', 'dangerous')? ",
                     specs, sizeof(specs));
 
     if (specs[0] == '\0')
@@ -634,6 +634,8 @@ bool wizard_add_mutation()
         mutat = RANDOM_SLIME_MUTATION;
     else if (spec == "qazlal")
         mutat = RANDOM_QAZLAL_MUTATION;
+    else if (spec == "dangerous")
+        mutat = RANDOM_DANGEROUS_MUTATION;
 
     if (mutat != NUM_MUTATIONS)
         return mutate(mutat, "wizard power", true, true);

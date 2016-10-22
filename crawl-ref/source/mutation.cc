@@ -76,10 +76,11 @@ enum class mutflag
     JIYVA   = 1 << 2, // jiyva-only muts
     QAZLAL  = 1 << 3, // qazlal wrath
     XOM     = 1 << 4, // xom being xom
+    DANGEROUS = 1 << 5, // actively deadly subset of BAD, used by severe contam
 
-    LAST    = XOM
+    LAST    = DANGEROUS
 };
-DEF_BITFIELD(mutflags, mutflag, 4);
+DEF_BITFIELD(mutflags, mutflag, 5);
 COMPILE_CHECK(mutflags::exponent(mutflags::last_exponent) == mutflag::LAST);
 
 #include "mutation-data.h"
@@ -190,6 +191,7 @@ static int _mut_weight(const mutation_def &mut, mutflag use)
             return 1;
         case mutflag::GOOD:
         case mutflag::BAD:
+        case mutflag::DANGEROUS:
         default:
             return mut.weight;
     }
@@ -903,6 +905,9 @@ static mutation_type _get_random_mutation(mutation_type mutclass)
         case RANDOM_GOOD_MUTATION:
             mt = mutflag::GOOD;
             break;
+        case RANDOM_DANGEROUS_MUTATION:
+            mt = mutflag::DANGEROUS;
+            break;
         default:
             die("invalid mutation class: %d", mutclass);
     }
@@ -1323,6 +1328,7 @@ bool mutate(mutation_type which_mutation, const string &reason, bool failMsg,
     case RANDOM_GOOD_MUTATION:
     case RANDOM_BAD_MUTATION:
     case RANDOM_CORRUPT_MUTATION:
+    case RANDOM_DANGEROUS_MUTATION:
         mutat = _get_random_mutation(which_mutation);
         break;
     case RANDOM_XOM_MUTATION:
@@ -1684,7 +1690,8 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
         || which_mutation == RANDOM_BAD_MUTATION
         || which_mutation == RANDOM_NON_SLIME_MUTATION
         || which_mutation == RANDOM_CORRUPT_MUTATION
-        || which_mutation == RANDOM_QAZLAL_MUTATION)
+        || which_mutation == RANDOM_QAZLAL_MUTATION
+        || which_mutation == RANDOM_DANGEROUS_MUTATION)
     {
         while (true)
         {
@@ -1726,6 +1733,8 @@ bool delete_mutation(mutation_type which_mutation, const string &reason,
                 (which_mutation == RANDOM_GOOD_MUTATION
                  && MUT_BAD(mdef))
                     || (which_mutation == RANDOM_BAD_MUTATION
+                        && MUT_GOOD(mdef))
+                    || (which_mutation == RANDOM_DANGEROUS_MUTATION
                         && MUT_GOOD(mdef));
 
             if (mismatch && (disallow_mismatch || !one_chance_in(10)))
@@ -2258,7 +2267,18 @@ bool temp_mutate(mutation_type which_mut, const string &reason)
 
 int temp_mutation_roll()
 {
-    return min(you.experience_level, 17) * (500 + roll_dice(5, 500)) / 17;
+    // We need a low-XL rampdown here to ensure that early tempmuts don't take
+    // unreasonable amounts of experience to remove.
+    int xl_exp = 500;
+    // XXX: This ramp isn't taking the actual experience per XL curve into 
+    // account.
+    if (you.experience_level < 17)
+        xl_exp /= (17 - you.experience_level);
+
+    // Increasing tempmut duration with each contam tier.
+    // This might need to be toned back down slightly.
+    return min(you.experience_level, 17) * (xl_exp + roll_dice(5, xl_exp)) / 17
+           * max(1, get_contamination_level());
 }
 
 /**

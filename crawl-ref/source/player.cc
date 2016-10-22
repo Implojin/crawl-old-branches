@@ -4141,7 +4141,7 @@ bool player_regenerates_mp()
 
 int get_contamination_level()
 {
-    const int glow = you.magic_contamination;
+    const int glow = (you.magic_contamination + you.persistent_contamination);
 
     if (glow > 60000)
         return glow / 20000 + 4;
@@ -4164,6 +4164,46 @@ int get_contamination_level()
 bool player_severe_contamination()
 {
     return get_contamination_level() >= SEVERE_CONTAM_LEVEL;
+}
+
+// Get a count of currently active spells that we want to counterbalance with
+// persistent glow.
+// If you add a charm here, please be sure to also make it removable with
+// ABIL_DISPERSE_CHARMS in ability.cc.
+int player_glowy_spells()
+{
+    int count = 0;
+
+    if (you.attribute[ATTR_REPEL_MISSILES])
+        count++;
+    if (you.attribute[ATTR_DEFLECT_MISSILES])
+        count++;
+    //if (you.duration[DUR_SWIFTNESS])
+    //    count++;
+    if (you.duration[DUR_ICY_ARMOUR])
+        count++;
+    if (you.duration[DUR_REGENERATION])
+        count++;
+    if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+        count++;
+    if (you.duration[DUR_FIRE_SHIELD])
+        count++;
+    if (you.props.exists("battlesphere"))
+        count++;
+    
+    return count;
+}
+
+void player_update_persistent_contamination(int contam_multiplier)
+{
+    you.persistent_contamination = 0;
+    int glow_spells = player_glowy_spells();
+    if (glow_spells > 0)
+    {
+        you.persistent_contamination = contam_multiplier * 
+                                       (3500 + (1500 * pow((glow_spells - 1), 3)));
+    }
+
 }
 
 /**
@@ -4205,9 +4245,16 @@ void contaminate_player(int change, bool controlled, bool msg)
     int old_level  = get_contamination_level();
     bool was_glowing = player_severe_contamination();
     int new_level  = 0;
+    int old_persist = you.persistent_contamination;
+    int contam_multiplier = 1;
 
-    if (change > 0 && player_equip_unrand(UNRAND_ETHERIC_CAGE))
-        change *= 2;
+    if (player_equip_unrand(UNRAND_ETHERIC_CAGE))
+        contam_multiplier *= 2;
+
+    player_update_persistent_contamination(contam_multiplier);
+
+    if (change > 0)
+        change *= contam_multiplier;
 
     you.magic_contamination = max(0, min(250000,
                                          you.magic_contamination + change));
@@ -4216,6 +4263,12 @@ void contaminate_player(int change, bool controlled, bool msg)
 
     if (you.magic_contamination != old_amount)
         dprf("change: %d  radiation: %d", change, you.magic_contamination);
+
+    if (you.persistent_contamination != old_persist)
+    {
+        dprf("change: %d  persistent radiation: %d", change,
+             you.persistent_contamination);
+    }
 
     if (new_level > old_level)
     {
@@ -4244,10 +4297,13 @@ void contaminate_player(int change, bool controlled, bool msg)
         }
     }
 
-    if (you.magic_contamination > 0)
+    if (you.magic_contamination > 0 || you.persistent_contamination > 0)
         learned_something_new(HINT_GLOWING);
 
     // Zin doesn't like mutations or mutagenic radiation.
+    // XXX: Glow can now produce muts at any nonzero glow level, but Zin won't
+    // care until player_severe_contamination() level is reached. This needs to
+    // be fixed.
     if (you_worship(GOD_ZIN))
     {
         // Whenever the glow status is first reached, give a warning message.
@@ -4255,7 +4311,9 @@ void contaminate_player(int change, bool controlled, bool msg)
             did_god_conduct(DID_CAUSE_GLOWING, 0, false);
         // If the player actively did something to increase glowing,
         // Zin is displeased.
-        else if (controlled && change > 0 && was_glowing)
+        // Assuming for now that all persistent contamination is intentional.
+        else if (was_glowing && ((controlled && change > 0)
+                                 || you.persistent_contamination > old_persist))
             did_god_conduct(DID_CAUSE_GLOWING, 1 + new_level, true);
     }
 }
@@ -5254,6 +5312,7 @@ player::player()
     sacrifices.init(0);
 
     magic_contamination = 0;
+    persistent_contamination = 0;
 
     had_book.reset();
     seen_spell.reset();

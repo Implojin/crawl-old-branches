@@ -313,6 +313,8 @@ static const ability_def Ability_List[] =
       0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_STOP_SINGING, "Stop Singing",
       0, 0, 0, 0, {}, abflag::NONE },
+    { ABIL_DISPERSE_CHARMS, "Disperse Charms",
+      0, 0, 0, 0, {}, abflag::NONE },
 
     { ABIL_DIG, "Dig", 0, 0, 0, 0, {}, abflag::INSTANT },
     { ABIL_SHAFT_SELF, "Shaft Self", 0, 0, 250, 0, {}, abflag::DELAY },
@@ -1626,6 +1628,7 @@ bool activate_talent(const talent& tal)
         case ABIL_END_TRANSFORMATION:
         case ABIL_DELAYED_FIREBALL:
         case ABIL_STOP_SINGING:
+        case ABIL_DISPERSE_CHARMS:
         case ABIL_STOP_RECALL:
         case ABIL_TRAN_BAT:
         case ABIL_ASHENZARI_END_TRANSFER:
@@ -2075,6 +2078,44 @@ static spret_type _do_ability(const ability_def& abil, bool fail)
         fail_check();
         you.duration[DUR_SONG_OF_SLAYING] = 0;
         mpr("You stop singing.");
+        break;
+
+    case ABIL_DISPERSE_CHARMS:
+        fail_check();
+        if (you.attribute[ATTR_REPEL_MISSILES] || you.attribute[ATTR_DEFLECT_MISSILES])
+        {
+            you.attribute[ATTR_REPEL_MISSILES] = 0;
+            you.attribute[ATTR_DEFLECT_MISSILES] = 0;
+            mpr("You feel your spell is no longer protecting you from missiles.");
+        }
+//        if (you.duration[DUR_SWIFTNESS])  // swift counterslow is enough?
+//        {
+//            you.attribute[ATTR_SWIFTNESS] = 0;
+//            you.duration[DUR_SWIFTNESS] = 0;
+//            mpr("You feel sluggish.");
+//        }
+        if (you.duration[DUR_ICY_ARMOUR])
+            remove_ice_armour();
+        if (you.duration[DUR_REGENERATION])
+        {
+            you.duration[DUR_REGENERATION] = 0;
+            mpr("Your skin stops crawling.");
+        }
+        if (you.duration[DUR_SHROUD_OF_GOLUBRIA])
+        {
+            you.duration[DUR_SHROUD_OF_GOLUBRIA] = 0;
+            mpr("Your shroud unravels.");
+        }
+        if (you.duration[DUR_FIRE_SHIELD])
+        {
+            you.duration[DUR_FIRE_SHIELD] = 0;
+            mpr("Your ring of flames gutters out.");
+        }
+        if (you.props.exists("battlesphere"))
+        {
+            end_battlesphere(find_battlesphere(&you), false);
+        }
+        mpr("You disperse your charms and your glow fades.");
         break;
 
     case ABIL_STOP_FLYING:
@@ -3401,6 +3442,9 @@ vector<talent> your_talents(bool check_confused, bool include_unusable)
 
     if (you.duration[DUR_SONG_OF_SLAYING])
         _add_talent(talents, ABIL_STOP_SINGING, check_confused);
+
+    if (player_glowy_spells())
+        _add_talent(talents, ABIL_DISPERSE_CHARMS, check_confused);
 
     // Evocations from items.
     if (you.scan_artefacts(ARTP_BLINK)
