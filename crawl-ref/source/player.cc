@@ -4266,8 +4266,8 @@ void contaminate_player(int change, bool controlled, bool msg)
 
     if (you.persistent_contamination != old_persist)
     {
-        dprf("change: %d  persistent radiation: %d", change,
-             you.persistent_contamination);
+        dprf("persistent radiation change: %d", (you.persistent_contamination -
+                                                 old_persist));
     }
 
     if (new_level > old_level)
