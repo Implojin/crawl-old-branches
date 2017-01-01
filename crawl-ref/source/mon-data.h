@@ -3309,7 +3309,7 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
       AT_NO_ATK, AT_NO_ATK },   // todo: fixup tentacle attacks + values
     10, 100,        // now trying with 10 HD instead of 6, and half old tongue HP
     4, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
-    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // not sure what speed I want to use here, 20 to 30? i want it to be able to reach 3 tiles and constrict in 1 turn. this will mean it chain attacks when it gets there though...
+    I_ANIMAL, HT_AMPHIBIOUS, 20, MOVE_ENERGY(6),    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // not sure what speed I want to use here, 20 to 30? i want it to be able to reach 3 tiles and constrict in 1 turn. this will mean it chain attacks when it gets there though...
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_SNAKE,
     {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR    // todo: fixup tentacle + segment tiles
 },
@@ -3323,7 +3323,7 @@ DUMMY(MONS_FROG, 'F', LIGHTGREEN, "giant frog", TILEP_MONS_BULLFROG)
     { AT_NO_ATK, AT_NO_ATK, AT_NO_ATK, AT_NO_ATK },
     6, 200,
     4, 0, MST_NO_SPELLS, CE_NOCORPSE, S_SILENT,
-    I_ANIMAL, HT_AMPHIBIOUS, 10, DEFAULT_ENERGY,    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // initial testing at 25 speed
+    I_ANIMAL, HT_AMPHIBIOUS, 20, MOVE_ENERGY(6),    // note: tentacle move speed set in mon-act.cc, speed here should just affect attacks? // initial testing at 25 speed
     MONUSE_NOTHING, SIZE_LARGE, MON_SHAPE_MISC,
     {TILEP_MONS_PROGRAM_BUG}, TILE_ERROR
 },

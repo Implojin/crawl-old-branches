@@ -3427,16 +3427,24 @@ static void _move_player(coord_def move)
         
         if (you.duration[DUR_SWALLOW])      // todo: fix this up
         {
-            //if (you.can_swim())
-                //mpr("You deftly slip free of the water engulfing you.");
-            //else //Unless you're (huge?), this takes longer than normal
-            //{
+            // todo: possibly add a size check here, to make escape easier/harder?
+            if (coinflip()) // note: in testing, coinflip swallow escape + constrict seemed possibly too dangerous, these effect escape chances need to be merged
+            {
                 mpr("With effort, you pry free of the maw that was swallowing "
                     "you.");
                 you.time_taken = you.time_taken * 3 / 2;
-            //}
-            you.duration[DUR_SWALLOW] = 1;
-            you.props.erase("swallowed");
+                you.duration[DUR_SWALLOW] = 1;
+                you.props.erase("swallowed");
+            }
+            else
+            {
+                mpr("You struggle against the maw engulfing your body but fail"
+                    " to escape.");
+                stop_running();
+                you.apply_berserk_penalty = true;
+                you.turn_is_over = true;
+                return;
+            }
         }
 
         if (you.digging)

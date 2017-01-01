@@ -5142,7 +5142,7 @@ bool player::clear_far_swallow()
     if (!mons || !adjacent(mons->pos(), you.pos()))
     {
         if (you.res_water_drowning())
-            mpr("The water engulfing you falls away.");     // todo: write appropriate message(s) for this
+            mpr("The maw engulfing your body releases you.");     // todo: write better message(s) for this?
         else
             mpr("You gasp with relief as air once again reaches your lungs.");
 
@@ -5166,7 +5166,7 @@ void handle_player_suffocating(int delay)
         if (!mons || !adjacent(mons->pos(), you.pos()))
         {
             if (you.res_water_drowning())
-                mpr("The water engulfing you falls away.");     // todo: write appropriate messages for this
+                mpr("The maw engulfing your body releases you.");     // todo: write better messages for this?
             else
                 mpr("You gasp with relief as air once again reaches your lungs.");
 

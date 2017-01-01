@@ -170,7 +170,7 @@ static void _escape_water_hold(monster& mons)
 }
 
 static void _escape_swallow(monster& mons)
-{
+{   // todo: add checks to fail escape, in the two places this is called
     if (mons.has_ench(ENCH_SWALLOW))        // todo: fix this up (add a check to fail due to constrict?) (possibly add strength or size bonus to escape?)
     {
         //if (mons_habitat(mons) != HT_AMPHIBIOUS

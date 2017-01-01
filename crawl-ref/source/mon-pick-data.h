@@ -53,7 +53,7 @@ static const pop_entry pop_d[] =
   {  7, 17,  350, SEMI, MONS_HUNGRY_GHOST },
   {  7, 17,  192, PEAK, MONS_CROCODILE },
   {  7, 17,  192, PEAK, MONS_HORNET },
-  {  8, 11,  670, FLAT, MONS_MANEATER_TOAD },   // testing with double howler monkey weight, flat
+  {  8, 12,  670, FLAT, MONS_MANEATER_TOAD },   // testing with double howler monkey weight, flat
   {  8, 17,  300, SEMI, MONS_TWO_HEADED_OGRE },
   {  8, 18,  335, SEMI, MONS_WYVERN },
   {  8, 18,  230, PEAK, MONS_EYE_OF_DRAINING },
@@ -218,13 +218,13 @@ static const pop_entry pop_blade[] =
 
 static const pop_entry pop_lair[] =
 { // Lair
-  { -3,  3,  670, FLAT, MONS_MANEATER_TOAD },
   { -3,  5,  825, SEMI, MONS_IGUANA },
   { -2,  6,  750, SEMI, MONS_RIVER_RAT },
   { -1,  4,   52, SEMI, MONS_BLACK_BEAR },
   {  0,  5,   25, PEAK, MONS_SCORPION },
   {  0,  6,  260, SEMI, MONS_BASILISK },
   {  0,  6,  260, SEMI, MONS_WOLF },
+  {  0,  6,  670, FLAT, MONS_MANEATER_TOAD },
   {  1,  5, 1000, FLAT, MONS_BULLFROG },
   {  1,  5, 1000, FLAT, MONS_PORCUPINE },
   {  1,  6,  880, FLAT, MONS_SPINY_FROG },
